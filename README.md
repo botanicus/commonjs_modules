@@ -19,3 +19,7 @@ We are working with the `example.rb`:
     
     sys.say_hello
     # => "Hello World!"
+
+# Problems
+
+* Construction `def exports.a_method` doesn't add the method into `CommonJS::Proxy#data`, so we can't iterate over all the methods in given module.
