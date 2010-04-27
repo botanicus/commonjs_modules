@@ -9,10 +9,17 @@ module CommonJS
   end
 
   class Proxy
+    attr_reader :data
     def initialize
       @data = Hash.new
     end
 
+    # register methods
+    def singleton_method_added(method)
+      @data[method] = self.method(method)
+    end
+
+    # register variables and constants
     def method_missing(method, *args, &block)
       if method.to_s.match(/=$/) && args.length == 1 && block.nil?
         @data[method.to_s[0..-2].to_sym] = args.first

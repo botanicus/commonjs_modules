@@ -12,14 +12,10 @@ We are working with the `example.rb`:
     require "import"
 
     sys = import("example")
-    # => #<CommonJS::Proxy:0x00000101170398 @data={:language => "Ruby", :VERSION_ => "0.0.1"}>
+    # => #<CommonJS::Proxy:0x00000101170398 @data={:language => "Ruby", :VERSION_ => "0.0.1", :say_hello=>#<Method: #<CommonJS::Proxy:0x000001024e9d48 ...>.say_hello>}>
 
     sys.language
     # => "Ruby"
     
     sys.say_hello
     # => "Hello World!"
-
-# Problems
-
-* Construction `def exports.a_method` doesn't add the method into `CommonJS::Proxy#data`, so we can't iterate over all the methods in given module.
