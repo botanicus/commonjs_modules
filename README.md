@@ -12,7 +12,7 @@ We are working with the `example.rb`:
     require "import"
 
     sys = import("example")
-    # => #<CommonJS::Proxy:0x00000101170398 @data={:language => "Ruby", :VERSION_ => "0.0.1", :say_hello=>#<Method: #<CommonJS::Proxy:0x000001024e9d48 ...>.say_hello>}>
+    # => #<CommonJS::Proxy:0x00000101170398 @data={:language => "Ruby", :VERSION_ => "0.0.1", :say_hello => #<Method: #<CommonJS::Proxy:0x000001024e9d48 ...>.say_hello>}>
 
     sys.language
     # => "Ruby"
