@@ -37,7 +37,6 @@ describe "Kernel#import" do
 
   describe "methods" do
     it "should be able to define a method using def exports.a_method" do
-      p @sys
       @sys.say_hello.should eql("Hello World!")
     end
 
