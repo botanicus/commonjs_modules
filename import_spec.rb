@@ -45,8 +45,10 @@ describe "Kernel#import" do
   end
 
   describe "classes" do
-    it "TODO" do
-      require 'pry'; binding.pry ###
+    describe '#inspect' do
+      it "shows the right name" do
+        expect(@sys.Task.inspect).to eql(:Task)
+      end
     end
   end
 end

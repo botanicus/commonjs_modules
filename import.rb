@@ -20,7 +20,14 @@ module CommonJS
     # register variables and constants
     def method_missing(method, *args, &block)
       if method.to_s.match(/=$/) && args.length == 1 && block.nil?
-        @data[method.to_s[0..-2].to_sym] = args.first
+        object_name = method.to_s[0..-2].to_sym
+        object = args.first
+
+        @data[object_name] = object
+
+        if object.is_a?(Class)
+          object.define_singleton_method(:inspect) { object_name }
+        end
       elsif @data[method]
         @data[method]
       else

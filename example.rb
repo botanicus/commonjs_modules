@@ -6,11 +6,6 @@ def exports.say_hello
 end
 
 exports.Task = Class.new do
-  # TODO: 05/06/2018 Do this automatically.
-  def self.inspect
-    'Task'
-  end
-
   def initialize(name)
     @name = name
   end
