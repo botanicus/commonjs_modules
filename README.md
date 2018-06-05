@@ -6,16 +6,21 @@ This is experimental [CommonJS modules](http://wiki.commonjs.org/wiki/Modules) i
 
 We are working with the `example.rb`:
 
-    # It works with $LOAD_PATH exactly as Kernel#require does
-    $: << File.expand_path(".")
+```ruby
+# It works with $LOAD_PATH exactly as Kernel#require does.
+$: << File.expand_path('.')
 
-    require "import"
+require 'import'
 
-    sys = import("example")
-    # => #<CommonJS::Proxy:0x00000101170398 @data={:language => "Ruby", :VERSION_ => "0.0.1", :say_hello => #<Method: #<CommonJS::Proxy:0x000001024e9d48 ...>.say_hello>}>
+sys = import('example')
+# => #<CommonJS::Proxy:0x00007fe73bac01f0 @data={
+#       :language=>"Ruby", :VERSION_=>"0.0.1",
+#       :say_hello=>#<Method: #<CommonJS::Proxy:0x00007fe73bac01f0 ...>.say_hello>,
+#       :Task=>Task}>
 
-    sys.language
-    # => "Ruby"
-    
-    sys.say_hello
-    # => "Hello World!"
+sys.language
+# => "Ruby"
+
+sys.say_hello
+# => "Hello World!"
+```
