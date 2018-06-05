@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 module CommonJS
   class RequiredModule
     attr_reader :exports
