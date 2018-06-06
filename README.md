@@ -7,7 +7,7 @@
 
 This is experimental [CommonJS modules](http://wiki.commonjs.org/wiki/Modules) implementation in Ruby. The main difference is that in this implementation everything is local, there isn't any messing with the global namespace. It has a lot of advantages include [hot code reloading](http://romeda.org/blog/2010/01/hot-code-loading-in-nodejs.html).
 
-# Usage
+# Example
 
 ```ruby
 # File lib/task.rb
@@ -28,16 +28,18 @@ export { Task }
 
 Task = import('task')
 
-exports.VERSION = '0.0.1'
+# Export a variable.
+export VERSION: '0.0.1'
 
-def exports.main(args = ARGV)
+# Export a function.
+def exports.main(args)
   task = Task.new(args.shift)
   puts "~ #{task.name}"
 end
 ```
 
 ```ruby
-#!/usr/bin/env ruby
+#!/usr/bin/env ruby -Ilib
 
 # File bin/main.rb
 
@@ -55,12 +57,61 @@ runner = import('runner')
 runner.main(ARGV)
 ```
 
+The syntax is very flexible. Check the [examples](https://github.com/botanicus/commonjs_modules/tree/master/examples) for more.
+
+# API
+
 ## `Kernel#import`
 
 `Kernel#import` is a substitute for:
 
 - `Kernel#require` when used with a path relative to `$LOAD_PATH` or
 - `Kernel#require_relative` when used with a path starting with `./` or `../`.
+
+## `Imports::Context#exports`
+
+_This object is available as a top-level method, since everything is evaluated against an instance of `Import::Context`_
+
+You can assign anything to `exports`: `exports.VERSION = '0.0.1'`. (_Currently the only limitation is that the value cannot be `nil`._)
+
+If you export key `default`, then only specified value will be exported, rather than an instance of `Imports::Exports` holding multiple values.
+
+You can also define singleton methods on the `exports` object:
+
+```ruby
+def exports.main(*args)
+  # TODO: Implement me.
+end
+```
+
+## `Imports::Context#export`
+
+This is a convenience method for assigning things to `exports`
+
+### Exporting default value
+
+```ruby
+# Using a block.
+export { DefaultValue }
+
+# Using hash.
+export default: DefaultValue
+```
+
+# Exporting multiple values
+
+```ruby
+# Using hash.
+export one: ClassOne, two: ClassTwo
+
+# Using names from #name as the key.
+# Every exported object has to have the #name method defined.
+# That means you have to do it manually for anonymous classes.
+class ClassOne; end
+class ClassTwo; end
+
+export ClassOne, ClassTwo
+```
 
 # Discussion
 
