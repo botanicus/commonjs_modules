@@ -1,6 +1,6 @@
 require 'import'
 
-describe 'Kernel#import', path: path do
+describe 'Kernel#import', path: 'examples/9_using_import' do
   subject do |example|
     import(example.metadata[:path])
   end

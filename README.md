@@ -51,7 +51,11 @@ Even though all the gems out there are using the global namespace, it doesn't ma
 
 ### Usage of refinements
 
-### YARD and RDoc
+### Static code analysers
+
+The big downside is you can way goodbye YARD, RDoc and many other static code analysers.
+
+_I assume Rubocop, CodeClimate and similar tools will be thrown off as well._
 
 # TODO
 
