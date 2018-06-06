@@ -25,8 +25,8 @@ module CommonJS
 
         @data[object_name] = object
 
-        if object.is_a?(Class)
-          object.define_singleton_method(:inspect) { object_name }
+        if object.is_a?(Class) && object.name.nil?
+          object.define_singleton_method(:name) { object_name.to_s }
         end
       elsif @data[method]
         @data[method]
@@ -41,6 +41,8 @@ module Kernel
   def import(path)
     if File.file?(path)
       fullpath = path
+    elsif File.file?("#{path}.rb")
+      fullpath = "#{path}.rb"
     else
       $:.each do |directory|
         choices  = [File.join(directory, path), File.join(directory, "#{path}.rb")]

@@ -24,3 +24,13 @@ sys.language
 sys.say_hello
 # => "Hello World!"
 ```
+
+# Discussion
+
+This makes use of Ruby modules for namespacing obsolete. Obviously, they still have their use as mixins.
+
+# TODO
+
+- Cache modules.
+- An example with refinements.
+- What happens when include is used on a file level? I think this makes refinements obsolete as well UNLESS it's for the core classes such as String or Regexp.
