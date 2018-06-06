@@ -106,6 +106,12 @@ end
 #        @__FILE__ = "example.rb">
 ```
 
+This is the only thing that the `export` method doesn't support.
+
+Also, here we are in an `Imports::Exports` instance rather than in a `Imports::Context`.
+
+Because of that we use `__ACCESSOR__`s on `Imports::Exports` rather than `accessor`s.
+
 ## `Imports::Context#export`
 
 This is a convenience method for assigning things to `exports`
