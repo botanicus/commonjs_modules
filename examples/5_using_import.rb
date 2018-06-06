@@ -32,7 +32,6 @@ end
 
 def exports.method_using_kernel_methods
   # Here we are in Export instance, NOT in Context!
-  p [:s, self, self.class]
   puts "Hello world!"
 end
 

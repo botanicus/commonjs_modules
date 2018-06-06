@@ -26,7 +26,7 @@ module Imports
             raise TypeError.new("Exported object cannot be nil!")
           end
 
-          exports.data[object.name.to_sym] = object
+          exports.__DATA__[object.name.to_sym] = object
         rescue NoMethodError
           raise ArgumentError.new("Every object has to respond to #name. Export the module manually using exports.name = object if the object doesn't respond to #name.")
         end
@@ -46,50 +46,57 @@ module Imports
       ::Object.const_get(name)
     end
 
-    KERNEL_METHODS_DELAGATED = [:import, :UNCOMMENT_puts, :p]
+    KERNEL_METHODS_DELEGATED = [:import, :UNCOMMENT_puts, :p]
 
     def method_missing(name, *args, &block)
-      super unless KERNEL_METHODS_DELAGATED.include? name
+      super unless KERNEL_METHODS_DELEGATED.include? name
       ::Kernel.send(name, *args, &block)
     end
 
     def respond_to_missing?(name, include_private = false)
-      KERNEL_METHODS_DELAGATED.include?(name) or super
+      KERNEL_METHODS_DELEGATED.include?(name) or super
     end
   end
 
+  # Only def exports.something; end is evaluated in the context of Export.
+  # Hence these are not recommented for bigger things, but it works fine
+  # for a collection of few methods that don't need a separate class.
   class Export
-    attr_reader :__FILE__, :data
+    attr_reader :__FILE__, :__DATA__
     def initialize(path)
-      @__FILE__, @data = path, Hash.new
+      @__FILE__, @__DATA__ = path, ::Hash.new
     end
 
-    # register methods
+    # Register methods.
     def singleton_method_added(method)
-      @data[method] = self.method(method)
+      @__DATA__[method] = self.method(method)
 
-      @data[method].define_singleton_method(:inspect) do
+      @__DATA__[method].define_singleton_method(:inspect) do
         "#<#{self.class} ##{method}>"
       end
     end
 
-    # register variables and constants
+    # Register variables and constants.
     def method_missing(method, *args, &block)
       if method.to_s.match(/=$/) && args.length == 1 && block.nil?
         object_name = method.to_s[0..-2].to_sym
         object = args.first
 
-        @data[object_name] = object
+        @__DATA__[object_name] = object
 
         if object.is_a?(Class) && object.name.nil?
           object.define_singleton_method(:name) { object_name.to_s }
           object.define_singleton_method(:inspect) { object_name.to_s }
         end
-      elsif @data[method]
-        @data[method]
+      elsif @__DATA__.has_key?(method)
+        @__DATA__[method]
       else
         super(method, *args, &block)
       end
+    end
+
+    def respond_to_missing?(method, include_private = false)
+      (method.to_s.match(/=$/) && args.length == 1 && block.nil?) || @__DATA__.has_key?(method)
     end
   end
 end
@@ -126,7 +133,7 @@ module Kernel
     object = Imports::Context.new(fullpath)
     object.instance_eval(code)
 
-    keys = object.exports.data.keys
+    keys = object.exports.__DATA__.keys
     if keys.include?(:default) && keys.length == 1
       return object.exports.default
     elsif keys.include?(:default) && keys.length > 1

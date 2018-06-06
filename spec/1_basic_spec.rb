@@ -15,7 +15,7 @@ describe 'Kernel#import', path: 'examples/1_basic' do
     end
 
     it "registers variables" do
-      expect(subject.data[:language]).to eql('Ruby')
+      expect(subject.__DATA__[:language]).to eql('Ruby')
     end
   end
 
@@ -29,7 +29,7 @@ describe 'Kernel#import', path: 'examples/1_basic' do
     end
 
     it "should register constants" do
-      expect(subject.data[:VERSION_]).to eql('0.0.1')
+      expect(subject.__DATA__[:VERSION_]).to eql('0.0.1')
     end
   end
 
@@ -39,11 +39,11 @@ describe 'Kernel#import', path: 'examples/1_basic' do
     end
 
     it "registers methods" do
-      expect(subject.data[:say_hello]).to be_kind_of(Method)
+      expect(subject.__DATA__[:say_hello]).to be_kind_of(Method)
     end
 
     it "overrides the #inspect method" do
-      expect(subject.data[:say_hello].inspect).to eql('#<Method #say_hello>')
+      expect(subject.__DATA__[:say_hello].inspect).to eql('#<Method #say_hello>')
     end
   end
 end

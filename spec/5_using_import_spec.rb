@@ -15,11 +15,11 @@ describe 'Kernel#import', path: 'examples/5_using_import' do
     end
 
     it do
-      expect { subject.method_using_imported_library_as_a_variable }.to raise_error
+      expect { subject.method_using_imported_library_as_a_variable }.to raise_error(NoMethodError)
     end
 
     it do
-      expect { subject.method_using_kernel_methods }.to raise_error
+      expect { subject.method_using_kernel_methods }.to raise_error(NoMethodError)
     end
   end
 end

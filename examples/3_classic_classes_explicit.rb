@@ -17,6 +17,8 @@ end
 class PrivateClass
 end
 
+# Class inherits from Object, so no matter what we do, here all the puts
+# and everything will be available again.
 class Task < PrivateClass
   def initialize(name)
     @name = name
