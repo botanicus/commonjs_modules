@@ -21,7 +21,7 @@ end
 
 # Export single value.
 export { Task }
-``
+```
 
 ```ruby
 # File lib/runner.rb
