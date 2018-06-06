@@ -39,6 +39,12 @@ end
 
 module Kernel
   def import(path)
+    # import('./test') and import('../test') behave like require_relative.
+    if path.start_with?('.')
+      base_dir = caller.last.split(':').first.split('/')[0..-2].join('/')
+      path = "#{base_dir}/#{path}"
+    end
+
     if File.file?(path)
       fullpath = path
     elsif File.file?("#{path}.rb")
@@ -52,6 +58,7 @@ module Kernel
         raise LoadError, "no such file to import -- #{path}"
       end
     end
+
     code   = File.read(fullpath)
     object = CommonJS::RequiredModule.new
     object.instance_eval(code)

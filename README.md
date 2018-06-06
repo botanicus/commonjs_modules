@@ -25,12 +25,17 @@ sys.say_hello
 # => "Hello World!"
 ```
 
+## `Kernel#import`
+
+`Kernel#import` is a substitute for `Kernel#require` or `Kernel#require_relative` if `path` of the imported library starts with `./` or `../`.
+
 # Discussion
 
 This makes use of Ruby modules for namespacing obsolete. Obviously, they still have their use as mixins.
 
 # TODO
 
+- exports.default = Class.new {}. What .name to set? The file I guess.
 - Cache modules.
 - An example with refinements.
 - What happens when include is used on a file level? I think this makes refinements obsolete as well UNLESS it's for the core classes such as String or Regexp.
