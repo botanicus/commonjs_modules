@@ -1,4 +1,38 @@
 module Imports
+  def self.register
+    @register ||= Hash.new
+  end
+
+  def self.resolve_path(path)
+    # import('./test') and import('../test') behave like require_relative.
+    if path.start_with?('.')
+      caller_file = caller_locations.first.absolute_path
+
+      unless caller_file
+        raise "Error when importing #{path}: caller[0] is #{caller[0]}"
+      end
+
+      base_dir = caller_file.split('/')[0..-2].join('/')
+      path = File.expand_path("#{base_dir}/#{path}")
+    end
+
+    if File.file?(path)
+      fullpath = path
+    elsif File.file?("#{path}.rb")
+      fullpath = "#{path}.rb"
+    else
+      $:.each do |directory|
+        choices  = [File.join(directory, path), File.join(directory, "#{path}.rb")]
+        fullpath = choices.find { |choice| File.file?(choice) }
+      end
+      if ! defined?(fullpath) || fullpath.nil?
+        raise LoadError, "no such file to import -- #{path}"
+      end
+    end
+
+    File.expand_path(fullpath)
+  end
+
   module DSL
     private
 
@@ -11,7 +45,7 @@ module Imports
         raise TypeError.new if value.nil?
         args << {default: block.call}
       elsif block && ! args.empty?
-        raise "Block provided along with #{args.inspect}, only 1 can be passed."
+        raise "Block #{block.inspect} provided along with #{args.inspect}, only 1 can be passed."
       end
 
       if args.length == 1 && args.first.is_a?(Hash)
@@ -112,35 +146,14 @@ end
 
 module Kernel
   def import(path)
-    # import('./test') and import('../test') behave like require_relative.
-    if path.start_with?('.')
-      caller_file = caller_locations.first.absolute_path
+    absolute_path = Imports.resolve_path(path)
 
-      unless caller_file
-        raise "Error when importing #{path}: caller[0] is #{caller[0]}"
-      end
-
-      base_dir = caller_file.split('/')[0..-2].join('/')
-      path = File.expand_path("#{base_dir}/#{path}")
+    object = Imports.register[absolute_path] ||= begin
+      code   = File.read(absolute_path)
+      object = Imports::Context.new(path)
+      object.instance_eval(code, path)
+      object
     end
-
-    if File.file?(path)
-      fullpath = path
-    elsif File.file?("#{path}.rb")
-      fullpath = "#{path}.rb"
-    else
-      $:.each do |directory|
-        choices  = [File.join(directory, path), File.join(directory, "#{path}.rb")]
-        fullpath = choices.find { |choice| File.file?(choice) }
-      end
-      if ! defined?(fullpath) || fullpath.nil?
-        raise LoadError, "no such file to import -- #{path}"
-      end
-    end
-
-    code   = File.read(fullpath)
-    object = Imports::Context.new(fullpath)
-    object.instance_eval(code, path)
 
     keys = object.exports.__DATA__.keys
     if keys.include?(:default) && keys.length == 1

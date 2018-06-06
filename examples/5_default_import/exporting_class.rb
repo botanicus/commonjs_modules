@@ -1,6 +1,6 @@
 # Run with ./examples/runner.rb examples/file.rb
 
-export default: class Test
+export Test: class Test
   def test
   end
 

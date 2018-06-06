@@ -6,7 +6,7 @@ describe 'Kernel#import', path: 'examples/2_annonymous_classes' do
   end
 
   describe '__FILE__' do
-    it { |example| eql(example.metadata[:path]) }
+    it -> (example) { eql(example.metadata[:path]) }
   end
 
   describe 'annonymous classes' do
@@ -23,8 +23,8 @@ describe 'Kernel#import', path: 'examples/2_annonymous_classes' do
 
       context 'using implicit exports' do
         it "exists with the right name" do
-          expect { subject.ScheduledTask_II }.not_to raise_error
-          expect(subject.ScheduledTask_II).to be_kind_of(Class)
+          expect { subject.ScheduledTask }.not_to raise_error
+          expect(subject.ScheduledTask).to be_kind_of(Class)
         end
       end
     end

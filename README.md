@@ -38,6 +38,8 @@ This makes use of Ruby modules for namespacing obsolete. Obviously, they still h
 
 ### Usage of refinements
 
+### YARD and RDoc
+
 # TODO
 
 - Rename examples, implicit is only `export ClassName`.

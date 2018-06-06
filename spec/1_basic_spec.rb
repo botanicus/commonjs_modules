@@ -6,7 +6,7 @@ describe 'Kernel#import', path: 'examples/1_basic' do
   end
 
   describe '__FILE__' do
-    it { |example| eql(example.metadata[:path]) }
+    it -> (example) { eql(example.metadata[:path]) }
   end
 
   describe 'variables' do
