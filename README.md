@@ -4,19 +4,17 @@ This is experimental [CommonJS modules](http://wiki.commonjs.org/wiki/Modules) i
 
 # Usage
 
-We are working with the `example.rb`:
+From `ruby -Ilib -S pry`:
 
 ```ruby
-# It works with $LOAD_PATH exactly as Kernel#require does.
-$: << File.expand_path('.')
-
 require 'import'
 
-sys = import('example')
-# => #<CommonJS::Proxy:0x00007fe73bac01f0 @data={
-#       :language=>"Ruby", :VERSION_=>"0.0.1",
-#       :say_hello=>#<Method: #<CommonJS::Proxy:0x00007fe73bac01f0 ...>.say_hello>,
-#       :Task=>Task}>
+sys = import('examples/1_basic')
+# => #<Imports::Export:0x00007f8dae26cd00
+#        @__DATA__={
+#          :language=>"Ruby", :VERSION_=>"0.0.1",
+#          :say_hello=>#<Method #say_hello>},
+#        @__FILE__="examples/1_basic.rb">
 
 sys.language
 # => "Ruby"
@@ -27,7 +25,10 @@ sys.say_hello
 
 ## `Kernel#import`
 
-`Kernel#import` is a substitute for `Kernel#require` or `Kernel#require_relative` if `path` of the imported library starts with `./` or `../`.
+`Kernel#import` is a substitute for:
+
+- `Kernel#require` when used with a path relative to `$LOAD_PATH` or
+- `Kernel#require_relative` when used with a path starting with `./` or `../`.
 
 # Discussion
 
