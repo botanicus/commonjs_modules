@@ -36,6 +36,14 @@ sys.say_hello
 
 This makes use of Ruby modules for namespacing obsolete. Obviously, they still have their use as mixins.
 
+This is a great news. With one global namespace, it's necessary to go full on with the namespacing craziness having all these `LibName::SubModule::Module::ClassName` and dealing either with horrible nesting or with potential for missing module on which we want to definie a class.
+
+Without a global namespace, everything is essentially flat. If we import a `Task`, there's no chance of colision, because we import everything manually and it's crystal clear where every single thing is coming from.
+
+### Why bother if no one else is using it?
+
+Even though all the gems out there are using the global namespace, it doesn't matter, it still a great way to organise your code. It plays well with the traditional approach.
+
 ### Usage of refinements
 
 ### YARD and RDoc
@@ -44,6 +52,4 @@ This makes use of Ruby modules for namespacing obsolete. Obviously, they still h
 
 - Rename examples, implicit is only `export ClassName`.
 - exports.default = Class.new {}. What .name to set? The file I guess.
-- Cache modules.
-- An example with refinements.
 - What happens when include is used on a file level? I think this makes refinements obsolete as well UNLESS it's for the core classes such as String or Regexp.
