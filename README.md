@@ -9,9 +9,9 @@ This is experimental [CommonJS modules](http://wiki.commonjs.org/wiki/Modules) i
 
 # Example
 
-```ruby
-# File lib/task.rb
+### File lib/task.rb
 
+```ruby
 class Task
   attr_reader :name
   def initialize(name)
@@ -23,9 +23,9 @@ end
 export { Task }
 ```
 
-```ruby
-# File lib/runner.rb
+### File lib/runner.rb
 
+```ruby
 Task = import('task')
 
 # Export a variable.
@@ -38,10 +38,10 @@ def exports.main(args)
 end
 ```
 
+### File bin/main.rb
+
 ```ruby
 #!/usr/bin/env ruby -Ilib
-
-# File bin/main.rb
 
 require 'import'
 
