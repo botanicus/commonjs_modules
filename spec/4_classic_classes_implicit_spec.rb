@@ -1,7 +1,7 @@
 require 'import'
 
 describe 'Kernel#import' do
-  subject { import('examples/3_classic_classes') }
+  subject { import('examples/4_classic_classes_implicit') }
 
   describe 'classes' do
     describe 'private classes' do
@@ -23,5 +23,6 @@ describe 'Kernel#import' do
     end
   end
 end
+
 
 

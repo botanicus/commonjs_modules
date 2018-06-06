@@ -4,6 +4,29 @@ module Imports
     def initialize
       @exports = Context.new
     end
+
+    # export default: TaskList
+    # export Task: Task, TL: TaskList
+    def export(*args)
+      if args.length == 1 && args.first.is_a?(Hash)
+        hash = args.first
+        if hash.keys.include?(:default) && hash.keys.length == 1
+          exports.default = hash[:default]
+        elsif hash.keys.include?(:default) && hash.keys.length > 1
+          raise "Default export detected, but it wasn't the only export: #{hash.keys.inspect}"
+        else
+          hash.keys.each do |key|
+            export.send(:"#{key}=", hash[key])
+          end
+        end
+      else
+        args.each do |object|
+          exports.data[object.name] = object
+        rescue NoMethodError
+          raise ArgumentError.new("Every object has to respond to #name. Export the module manually using exports.name = object if the object doesn't respond to #name.")
+        end
+      end
+    end
   end
 
   class Context #< BasicObject
@@ -74,10 +97,11 @@ module Kernel
     object = Imports::DSL.new
     object.instance_eval(code)
 
-    if object.exports.data.keys == [:default]
-      return object
-    elsif object.exports.data.keys.include?(:default)
-      raise "Default export detected, but it wasn't the only export: #{export.data.keys.inspect}"
+    keys = object.exports.data.keys
+    if keys.include?(:default) && keys.length == 1
+      return object.exports.default
+    elsif keys.include?(:default) && keys.length > 1
+      raise "Default export detected, but it wasn't the only export: #{keys.inspect}"
     else
       return object.exports
     end
