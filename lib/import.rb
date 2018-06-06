@@ -1,16 +1,20 @@
-module CommonJS
-  class RequiredModule
+module Imports
+  class DSL
     attr_reader :exports
     def initialize
-      @exports = Proxy.new
+      @exports = Context.new
     end
   end
 
-  class Proxy
+  class Context #< BasicObject
     attr_reader :data
     def initialize
       @data = Hash.new
     end
+
+    # def self.const_missing(name)
+    #   ::Object.const_get(name)
+    # end
 
     # register methods
     def singleton_method_added(method)
@@ -41,8 +45,15 @@ module Kernel
   def import(path)
     # import('./test') and import('../test') behave like require_relative.
     if path.start_with?('.')
-      base_dir = caller.last.split(':').first.split('/')[0..-2].join('/')
-      path = "#{base_dir}/#{path}"
+      caller_file = caller_locations.first.absolute_path
+
+      unless caller_file
+        raise "Error when importing #{path}: caller[0] is #{caller[0]}"
+      end
+
+      base_dir = caller_file.split('/')[0..-2].join('/')
+      path = File.expand_path("#{base_dir}/#{path}")
+      require 'pry'; binding.pry ###
     end
 
     if File.file?(path)
@@ -60,8 +71,15 @@ module Kernel
     end
 
     code   = File.read(fullpath)
-    object = CommonJS::RequiredModule.new
+    object = Imports::DSL.new
     object.instance_eval(code)
-    return object.exports
+
+    if object.exports.data.keys == [:default]
+      return object
+    elsif object.exports.data.keys.include?(:default)
+      raise "Default export detected, but it wasn't the only export: #{export.data.keys.inspect}"
+    else
+      return object.exports
+    end
   end
 end
