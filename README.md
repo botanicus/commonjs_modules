@@ -9,7 +9,7 @@ This is experimental [CommonJS modules](http://wiki.commonjs.org/wiki/Modules) i
 
 # Example
 
-### File lib/task.rb
+### File `lib/task.rb`
 
 ```ruby
 class Task
@@ -23,7 +23,7 @@ end
 export { Task }
 ```
 
-### File lib/runner.rb
+### File `lib/runner.rb`
 
 ```ruby
 Task = import('task')
@@ -38,7 +38,7 @@ def exports.main(args)
 end
 ```
 
-### File bin/main.rb
+### File `bin/main.rb`
 
 ```ruby
 #!/usr/bin/env ruby -Ilib
@@ -72,7 +72,11 @@ The syntax is very flexible. Check the [examples](https://github.com/botanicus/c
 
 _This object is available as a top-level method, since everything is evaluated against an instance of `Import::Context`_
 
-You can assign anything to `exports`: `exports.VERSION = '0.0.1'`. (_Currently the only limitation is that the value cannot be `nil`._)
+You can assign anything to `exports`. _Currently the only limitation is that the value cannot be `nil`._
+
+```ruby
+exports.VERSION = '0.0.1'
+```
 
 If you export key `default`, then only specified value will be exported, rather than an instance of `Imports::Exports` holding multiple values.
 
