@@ -9,23 +9,53 @@ This is experimental [CommonJS modules](http://wiki.commonjs.org/wiki/Modules) i
 
 # Usage
 
+```ruby
+# task.rb
+
+class Task
+  attr_reader :name
+  def initialize(name)
+    @name
+  end
+end
+
+# Import single value.
+export default: Task
+``
+
 From `ruby -Ilib -S pry`:
 
 ```ruby
+# main.rb
+
+```ruby
+# runner.rb
+
+Task = import('task')
+
+exports.VERSION = '0.0.1'
+
+def exports.main(args = ARGV)
+  task = Task.new(args.shift)
+  puts "~ #{task.name}"
+end
+```
+
+```ruby
+#!/usr/bin/env ruby
+
 require 'import'
 
-sys = import('examples/1_basic')
+runner = import('runner')
+
 # => #<Imports::Export:0x00007f8dae26cd00
-#        @__DATA__={
-#          :language=>"Ruby", :VERSION_=>"0.0.1",
-#          :say_hello=>#<Method #say_hello>},
-#        @__FILE__="examples/1_basic.rb">
+#        @__DATA__ = {
+#          :VERSION => "0.0.1",
+#          :main => #<Method #main>},
+#        @__FILE__ = "runner.rb">
 
-sys.language
-# => "Ruby"
-
-sys.say_hello
-# => "Hello World!"
+# Run the code.
+runner.main(ARGV)
 ```
 
 ## `Kernel#import`
@@ -59,9 +89,9 @@ _I assume Rubocop, CodeClimate and similar tools will be thrown off as well._
 
 # TODO
 
-- Rename examples, implicit is only `export ClassName`.
+- Create missing tests, fix existing ones.
 - exports.default = Class.new {}. What .name to set? The file I guess.
-- What happens when include is used on a file level? I think this makes refinements obsolete as well UNLESS it's for the core classes such as String or Regexp.
+- Tag and release version 0.1.
 
 [Gem version]: https://rubygems.org/gems/commonjs_modules
 [Build status]: https://travis-ci.org/botanicus/commonjs_modules
