@@ -1,4 +1,6 @@
-exports.Task = Class.new do
+#!/usr/bin/env ruby -Ilib -rimport
+#
+#exports.Task = Class.new do
   def initialize(name)
     @name = name
   end
@@ -9,3 +11,5 @@ exports.ScheduledTask = Class.new(exports.Task) do
     # TODO ...
   end
 end
+
+(require 'pry'; binding.pry) if __FILE__ == $0
