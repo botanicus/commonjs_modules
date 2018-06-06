@@ -35,7 +35,7 @@ This makes use of Ruby modules for namespacing obsolete. Obviously, they still h
 
 # TODO
 
-- `export Task, TaskList`, `export :default, Task`, using `klass.name`.
+- Rename examples, implicit is only `export ClassName`.
 - exports.default = Class.new {}. What .name to set? The file I guess.
 - Cache modules.
 - An example with refinements.

@@ -1,7 +1,13 @@
 require 'import'
 
-describe 'Kernel#import' do
-  subject { import('examples/1_basic') }
+describe 'Kernel#import', path: 'examples/1_basic' do
+  subject do |example|
+    import(example.metadata[:path])
+  end
+
+  describe '__FILE__' do
+    it { |example| eql(example.metadata[:path]) }
+  end
 
   describe 'variables' do
     it "defines a variable using exports.setter = value" do
@@ -33,7 +39,11 @@ describe 'Kernel#import' do
     end
 
     it "registers methods" do
-      expect(subject.data[:say_hello]).to eql(subject.method(:say_hello))
+      expect(subject.data[:say_hello]).to be_kind_of(Method)
+    end
+
+    it "overrides the #inspect method" do
+      expect(subject.data[:say_hello].inspect).to eql('#<Method #say_hello>')
     end
   end
 end

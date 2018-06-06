@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby -Ilib -rimport
 
+# Simulate exports, so we can conveniently run this file to get PRY prompt.
+# NOTE that there is one significant difference: the top-level namespace
+# is an instance of Object rather than of Imports::Context!
 if __FILE__ == $0
   def exports
     @exports ||= Imports::Export.new(__FILE__)
@@ -16,8 +19,8 @@ Test = import('examples/6_default_import')
 
 # Assigning to a local variable will make the variable available only within the top-level context.
 # FIXME: 06/06/2018 relative paths don't work as of now.
-# sys  = import('./1_basic')
-sys  = import('examples/1_basic')
+# sys = import('./1_basic')
+sys = import('examples/1_basic')
 
 def exports.method_using_imported_library_as_a_constant
   Task.new("Repair the bike")
@@ -28,6 +31,8 @@ def exports.method_using_imported_library_as_a_variable
 end
 
 def exports.method_using_kernel_methods
+  # Here we are in Export instance, NOT in Context!
+  p [:s, self, self.class]
   puts "Hello world!"
 end
 

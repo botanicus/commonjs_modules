@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby -Ilib -rimport
 
+# Simulate exports, so we can conveniently run this file to get PRY prompt.
+# NOTE that there is one significant difference: the top-level namespace
+# is an instance of Object rather than of Imports::Context!
 if __FILE__ == $0
   def exports
     @exports ||= Imports::Export.new(__FILE__)

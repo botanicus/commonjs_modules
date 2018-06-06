@@ -1,7 +1,13 @@
 require 'import'
 
-describe 'Kernel#import' do
-  subject { import('examples/5_using_import') }
+describe 'Kernel#import', path: 'examples/5_using_import' do
+  subject do |example|
+    import(example.metadata[:path])
+  end
+
+  describe '__FILE__' do
+    it { |example| eql(example.metadata[:path]) }
+  end
 
   describe 'variables' do
     it do

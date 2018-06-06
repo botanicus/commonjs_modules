@@ -34,12 +34,27 @@ module Imports
     end
   end
 
-  class Context
+  class Context < BasicObject
     include DSL
 
     attr_reader :exports
     def initialize(path)
       @exports = Export.new(path)
+    end
+
+    def self.const_missing(name)
+      ::Object.const_get(name)
+    end
+
+    KERNEL_METHODS_DELAGATED = [:import, :UNCOMMENT_puts, :p]
+
+    def method_missing(name, *args, &block)
+      super unless KERNEL_METHODS_DELAGATED.include? name
+      ::Kernel.send(name, *args, &block)
+    end
+
+    def respond_to_missing?(name, include_private = false)
+      KERNEL_METHODS_DELAGATED.include?(name) or super
     end
   end
 
@@ -67,6 +82,7 @@ module Imports
         @data[object_name] = object
 
         if object.is_a?(Class) && object.name.nil?
+          object.define_singleton_method(:name) { object_name.to_s }
           object.define_singleton_method(:inspect) { object_name.to_s }
         end
       elsif @data[method]

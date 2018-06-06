@@ -1,7 +1,13 @@
 require 'import'
 
-describe 'Kernel#import' do
-  subject { import('examples/3_classic_classes_explicit') }
+describe 'Kernel#import', path: 'examples/3_classic_classes_explicit' do
+  subject do |example|
+    import(example.metadata[:path])
+  end
+
+  describe '__FILE__' do
+    it { |example| eql(example.metadata[:path]) }
+  end
 
   describe 'classes' do
     describe 'private classes' do

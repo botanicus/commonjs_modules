@@ -1,13 +1,23 @@
 require 'import'
 
-describe 'Kernel#import' do
-  subject { import('examples/2_annonymous_classes') }
+describe 'Kernel#import', path: 'examples/2_annonymous_classes' do
+  subject do |example|
+    import(example.metadata[:path])
+  end
+
+  describe '__FILE__' do
+    it { |example| eql(example.metadata[:path]) }
+  end
 
   describe 'annonymous classes' do
     describe '.name' do
       context 'using explicit exports' do
-        it "defines the right name" do
+        it "defines the right .name" do
           expect(subject.Task.name).to eql('Task')
+        end
+
+        it "overrides the .inspect method" do
+          expect(subject.Task.inspect).to eql('Task')
         end
       end
 
