@@ -108,7 +108,7 @@ end
 
 This is the only thing that the `export` method doesn't support.
 
-Also, here we are in an `Imports::Exports` instance rather than in a `Imports::Context`.
+Also, here we are in an `Imports::Exports` instance rather than in `Imports::Context`.
 
 Because of that we use `__ACCESSOR__`s on `Imports::Exports` rather than `accessor`s.
 
@@ -126,7 +126,7 @@ export { DefaultValue }
 export default: DefaultValue
 ```
 
-# Exporting multiple values
+### Exporting multiple values
 
 ```ruby
 # Using hash.
@@ -138,7 +138,13 @@ export one: ClassOne, two: ClassTwo
 class ClassOne; end
 class ClassTwo; end
 
-export ClassOne, ClassTwo
+ClassThree = Class.new do
+  def self.name
+    'ClassThree'
+  end
+end
+
+export ClassOne, ClassTwo, ClassThree
 ```
 
 # Discussion
