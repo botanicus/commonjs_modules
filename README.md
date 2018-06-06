@@ -76,9 +76,22 @@ You can assign anything to `exports`. _Currently the only limitation is that the
 
 ```ruby
 exports.VERSION = '0.0.1'
+
+# import('example.rb')
+# => #<Imports::Export:0x00007f8dae26cd00
+#        @__DATA__ = {
+#          :VERSION => "0.0.1",
+#        @__FILE__ = "example.rb">
 ```
 
 If you export key `default`, then only specified value will be exported, rather than an instance of `Imports::Exports` holding multiple values.
+
+```ruby
+exports.default = "Only this will be exported."
+
+# import('example.rb')
+# => "Only this will be exported."
+```
 
 You can also define singleton methods on the `exports` object:
 
@@ -86,6 +99,11 @@ You can also define singleton methods on the `exports` object:
 def exports.main(*args)
   # TODO: Implement me.
 end
+
+# => #<Imports::Export:0x00007f8dae26cd00
+#        @__DATA__ = {
+#          :main => #<Method #main>},
+#        @__FILE__ = "example.rb">
 ```
 
 ## `Imports::Context#export`
