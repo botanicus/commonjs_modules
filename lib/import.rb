@@ -1,9 +1,6 @@
 module Imports
-  class DSL
-    attr_reader :exports
-    def initialize
-      @exports = Context.new
-    end
+  module DSL
+    private
 
     # export default: TaskList
     # export Task: Task, TL: TaskList
@@ -29,15 +26,20 @@ module Imports
     end
   end
 
-  class Context #< BasicObject
+  class Context
+    include DSL
+
+    attr_reader :exports
+    def initialize
+      @exports = Export.new
+    end
+  end
+
+  class Export
     attr_reader :data
     def initialize
       @data = Hash.new
     end
-
-    # def self.const_missing(name)
-    #   ::Object.const_get(name)
-    # end
 
     # register methods
     def singleton_method_added(method)
@@ -94,7 +96,7 @@ module Kernel
     end
 
     code   = File.read(fullpath)
-    object = Imports::DSL.new
+    object = Imports::Context.new
     object.instance_eval(code)
 
     keys = object.exports.data.keys
