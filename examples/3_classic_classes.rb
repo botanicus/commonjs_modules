@@ -4,15 +4,15 @@
 class PrivateClass
 end
 
-class TaskList < PrivateClass
+class Task < PrivateClass
 end
 
-class ScheduledTaskList < TaskList
+class ScheduledTask < Task
 end
 
 # Here we use a different export name to verify that the class name doesn't get
-# overriden (class_name.name reports TaskList resp. ScheduledTaskList rather than
+# overriden (class_name.name reports Task resp. ScheduledTask rather than
 # the underscored version).
-exports._TaskList = TaskList
-exports._ScheduledTaskList = ScheduledTaskList
+exports._Task = Task
+exports._ScheduledTask = ScheduledTask
 

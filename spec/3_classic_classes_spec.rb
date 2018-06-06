@@ -17,7 +17,7 @@ describe 'Kernel#import' do
     describe '.name' do
       context 'classic classes' do
         it "doesn't rewrite the name" do
-          expect(subject._TaskList.name).to eql('TaskList')
+          expect(subject._Task.name).to eql('Task')
         end
       end
     end
