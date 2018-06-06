@@ -10,7 +10,7 @@ This is experimental [CommonJS modules](http://wiki.commonjs.org/wiki/Modules) i
 # Usage
 
 ```ruby
-# task.rb
+# File lib/task.rb
 
 class Task
   attr_reader :name
@@ -19,17 +19,12 @@ class Task
   end
 end
 
-# Import single value.
-export default: Task
+# Export single value.
+export { Task }
 ``
 
-From `ruby -Ilib -S pry`:
-
 ```ruby
-# main.rb
-
-```ruby
-# runner.rb
+# File lib/runner.rb
 
 Task = import('task')
 
@@ -44,6 +39,8 @@ end
 ```ruby
 #!/usr/bin/env ruby
 
+# File bin/main.rb
+
 require 'import'
 
 runner = import('runner')
@@ -52,7 +49,7 @@ runner = import('runner')
 #        @__DATA__ = {
 #          :VERSION => "0.0.1",
 #          :main => #<Method #main>},
-#        @__FILE__ = "runner.rb">
+#        @__FILE__ = "lib/runner.rb">
 
 # Run the code.
 runner.main(ARGV)
