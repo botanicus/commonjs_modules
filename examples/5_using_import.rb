@@ -1,10 +1,18 @@
 #!/usr/bin/env ruby -Ilib -rimport
 
+if __FILE__ == $0
+  def exports
+    @exports ||= Imports::Export.new(__FILE__)
+  end
+
+  include Imports::DSL
+end
+
 # Assigning to a constant will make the variable available within classes.
 # FIXME: 06/06/2018 relative paths don't work as of now.
 # Task = import('./3_classic_classes')._Task
-Task = import('examples/3_classic_classes')._Task
-Test = import('examples/4_default_import')
+Task = import('examples/3_classic_classes_explicit')._Task
+Test = import('examples/6_default_import')
 
 # Assigning to a local variable will make the variable available only within the top-level context.
 # FIXME: 06/06/2018 relative paths don't work as of now.
