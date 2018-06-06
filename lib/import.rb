@@ -4,7 +4,16 @@ module Imports
 
     # export default: TaskList
     # export Task: Task, TL: TaskList
-    def export(*args)
+    # export { MyClass } # export as default
+    def export(*args, &block)
+      if block && args.empty?
+        value = block.call
+        raise TypeError.new if value.nil?
+        args << {default: block.call}
+      elsif block && ! args.empty?
+        raise "Block provided along with #{args.inspect}, only 1 can be passed."
+      end
+
       if args.length == 1 && args.first.is_a?(Hash)
         hash = args.first
         if hash.keys.include?(:default) && hash.keys.length == 1
@@ -46,7 +55,7 @@ module Imports
       ::Object.const_get(name)
     end
 
-    KERNEL_METHODS_DELEGATED = [:import, :UNCOMMENT_puts, :p]
+    KERNEL_METHODS_DELEGATED = [:import, :require, :raise, :puts, :p]
 
     def method_missing(name, *args, &block)
       super unless KERNEL_METHODS_DELEGATED.include? name
@@ -131,7 +140,7 @@ module Kernel
 
     code   = File.read(fullpath)
     object = Imports::Context.new(fullpath)
-    object.instance_eval(code)
+    object.instance_eval(code, path)
 
     keys = object.exports.__DATA__.keys
     if keys.include?(:default) && keys.length == 1

@@ -32,7 +32,11 @@ sys.say_hello
 
 # Discussion
 
+### Usage of modules
+
 This makes use of Ruby modules for namespacing obsolete. Obviously, they still have their use as mixins.
+
+### Usage of refinements
 
 # TODO
 

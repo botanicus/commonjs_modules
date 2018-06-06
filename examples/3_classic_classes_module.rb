@@ -1,18 +1,7 @@
-#!/usr/bin/env ruby -Ilib -rimport
-
-# Simulate exports, so we can conveniently run this file to get PRY prompt.
-# NOTE that there is one significant difference: the top-level namespace
-# is an instance of Object rather than of Imports::Context!
-if __FILE__ == $0
-  def exports
-    @exports ||= Imports::Export.new(__FILE__)
-  end
-
-  include Imports::DSL
-end
+# Run with ./examples/runner.rb examples/file.rb
 
 # Using Kernel#require, we'd import this class into the global namespace.
-# Using Kernel#import, we won't as everything is evaluated in a context
+# Using Kernel#import, we won't, as everything is evaluated in a context
 # of a name context object.
 class PrivateClass
 end
@@ -33,5 +22,3 @@ end
 # the underscored version).
 exports._Task = Task
 exports._ScheduledTask = ScheduledTask
-
-(require 'pry'; binding.pry) if __FILE__ == $0
