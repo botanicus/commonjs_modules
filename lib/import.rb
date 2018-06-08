@@ -3,6 +3,16 @@ module Imports
     @register ||= Hash.new
   end
 
+  def self.resolve_against_load_path(path)
+    $:.uniq.each do |directory|
+      choices  = [File.join(directory, path), File.join(directory, "#{path}.rb")]
+      fullpath = choices.find { |choice| File.file?(choice) }
+      return fullpath if fullpath
+    end
+
+    return nil
+  end
+
   def self.resolve_path(path)
     # import('./test') and import('../test') behave like require_relative.
     if path.start_with?('.')
@@ -21,11 +31,7 @@ module Imports
     elsif File.file?("#{path}.rb")
       fullpath = "#{path}.rb"
     else
-      $:.each do |directory|
-        choices  = [File.join(directory, path), File.join(directory, "#{path}.rb")]
-        fullpath = choices.find { |choice| File.file?(choice) }
-      end
-      if ! defined?(fullpath) || fullpath.nil?
+      unless fullpath = self.resolve_against_load_path(path)
         raise LoadError, "no such file to import -- #{path}"
       end
     end
@@ -41,14 +47,22 @@ module Imports
     # export { MyClass } # export as default
     def export(*args, &block)
       if block && args.empty?
-        value = block.call
-        raise TypeError.new if value.nil?
-        args << {default: block.call}
-      elsif block && ! args.empty?
-        raise "Block #{block.inspect} provided along with #{args.inspect}, only 1 can be passed."
-      end
+        # Lazy-loaded and cached.
+        # export { Task }
+        exports.define_singleton_method(:default) { @default ||= block.call }
+      elsif block && args.length == 1
+        # Lazy-loaded and cached.
+        # export(:logger) { Logger.new }
+        exports.define_singleton_method(args.first) do
+          if self.instance_variable_get(:"@#{args.first}").nil?
+            self.instance_variable_set(:"@#{args.first}", block.call)
+          end
 
-      if args.length == 1 && args.first.is_a?(Hash)
+          self.instance_variable_get(:"@#{args.first}")
+        end
+      elsif block && args.length > 1
+        raise "When used with a block, one or no argument is expected."
+      elsif args.length == 1 && args.first.is_a?(Hash)
         hash = args.first
         if hash.keys.include?(:default) && hash.keys.length == 1
           # export default: MyClass
@@ -140,6 +154,11 @@ module Imports
 
     def respond_to_missing?(method, include_private = false)
       (method.to_s.match(/=$/) && args.length == 1 && block.nil?) || @__DATA__.has_key?(method)
+    end
+
+    # Convenience methods.
+    def grab(*args)
+      args.map { |arg| self.send(arg) }
     end
   end
 end

@@ -149,6 +149,15 @@ export ClassOne, ClassTwo, ClassThree
 
 # Discussion
 
+### The thing about private APIs in Ruby
+
+Ruby developers seldom distinguish between public and private APIs in their projects. Everything's goes into the global namespace, hencer everything is kinda public.
+
+With commonjs_modules, you can choose what you export and what not.
+
+TODO: Example.
+
+
 ### Usage of modules
 
 This makes use of Ruby modules for namespacing obsolete. Obviously, they still have their use as mixins.
@@ -163,17 +172,52 @@ Even though all the gems out there are using the global namespace, it doesn't ma
 
 ### Usage of refinements
 
+### No more monkey-patching
+
+```ruby
+OriginalLib = import('original_lib')
+
+class OriginalLibNew < OriginalLib
+  def method_i_want_to_override
+    # ..
+  end
+end
+
+```
+
 ### Static code analysers
 
 The big downside is you can way goodbye YARD, RDoc and many other static code analysers.
 
 _I assume Rubocop, CodeClimate and similar tools will be thrown off as well._
 
+### Standard Ruby compatibility
+
+```ruby
+class Hour; end
+
+export { Hour } if defined?(export)
+```
+
 # TODO
 
+- It DOES make sense to have default and others, see interfacer!
+- This sets name: a = Testx = Class.new
 - Create missing tests, fix existing ones.
 - exports.default = Class.new {}. What .name to set? The file I guess.
 - Tag and release version 0.1.
+- This:
+
+```ruby
+exports.myFnName do
+end
+
+# name here?
+exports.default do
+end
+# -> Same as def exports.myFnName, but different namespace.
+```
+- Tweak rSpec to evaluate test files against `Imports::Context` or something alike, otherwise we have the annoying constant was already defined messages all over.
 
 [Gem version]: https://rubygems.org/gems/commonjs_modules
 [Build status]: https://travis-ci.org/botanicus/commonjs_modules
