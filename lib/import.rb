@@ -83,7 +83,7 @@ module Imports
             raise TypeError.new("Exported object cannot be nil!")
           end
 
-          exports.__DATA__[object.name.to_sym] = object
+          exports._DATA_[object.name.to_sym] = object
         rescue NoMethodError
           raise ArgumentError.new("Every object has to respond to #name. Export the module manually using exports.name = object if the object doesn't respond to #name.")
         end
@@ -119,16 +119,16 @@ module Imports
   # Hence these are not recommented for bigger things, but it works fine
   # for a collection of few methods that don't need a separate class.
   class Export
-    attr_reader :__FILE__, :__DATA__
+    attr_reader :_FILE_, :_DATA_
     def initialize(path)
-      @__FILE__, @__DATA__ = path, ::Hash.new
+      @_FILE_, @_DATA_ = path, ::Hash.new
     end
 
     # Register methods.
     def singleton_method_added(method)
-      @__DATA__[method] = self.method(method)
+      @_DATA_[method] = self.method(method)
 
-      @__DATA__[method].define_singleton_method(:inspect) do
+      @_DATA_[method].define_singleton_method(:inspect) do
         "#<#{self.class} ##{method}>"
       end
     end
@@ -139,21 +139,21 @@ module Imports
         object_name = method.to_s[0..-2].to_sym
         object = args.first
 
-        @__DATA__[object_name] = object
+        @_DATA_[object_name] = object
 
         if object.is_a?(Class) && object.name.nil?
           object.define_singleton_method(:name) { object_name.to_s }
           object.define_singleton_method(:inspect) { object_name.to_s }
         end
-      elsif @__DATA__.has_key?(method)
-        @__DATA__[method]
+      elsif @_DATA_.has_key?(method)
+        @_DATA_[method]
       else
         super(method, *args, &block)
       end
     end
 
     def respond_to_missing?(method, include_private = false)
-      (method.to_s.match(/=$/) && args.length == 1 && block.nil?) || @__DATA__.has_key?(method)
+      (method.to_s.match(/=$/) && args.length == 1 && block.nil?) || @_DATA_.has_key?(method)
     end
 
     # Convenience methods.
@@ -174,7 +174,7 @@ module Kernel
       object
     end
 
-    keys = object.exports.__DATA__.keys
+    keys = object.exports._DATA_.keys
     if keys.include?(:default) && keys.length == 1
       return object.exports.default
     elsif keys.include?(:default) && keys.length > 1

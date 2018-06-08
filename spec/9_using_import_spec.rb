@@ -5,7 +5,7 @@ describe 'Kernel#import', path: 'examples/9_using_import' do
     import(example.metadata[:path])
   end
 
-  describe '__FILE__' do
+  describe '_FILE_' do
     it { |example| eql(example.metadata[:path]) }
   end
 

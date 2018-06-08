@@ -48,10 +48,10 @@ require 'import'
 runner = import('runner')
 
 # => #<Imports::Export:0x00007f8dae26cd00
-#        @__DATA__ = {
+#        @_DATA_ = {
 #          :VERSION => "0.0.1",
 #          :main => #<Method #main>},
-#        @__FILE__ = "lib/runner.rb">
+#        @_FILE_ = "lib/runner.rb">
 
 # Run the code.
 runner.main(ARGV)
@@ -79,9 +79,9 @@ exports.VERSION = '0.0.1'
 
 # import('example.rb')
 # => #<Imports::Export:0x00007f8dae26cd00
-#        @__DATA__ = {
+#        @_DATA_ = {
 #          :VERSION => "0.0.1",
-#        @__FILE__ = "example.rb">
+#        @_FILE_ = "example.rb">
 ```
 
 If you export key `default`, then only specified value will be exported, rather than an instance of `Imports::Exports` holding multiple values.
@@ -101,9 +101,9 @@ def exports.main(*args)
 end
 
 # => #<Imports::Export:0x00007f8dae26cd00
-#        @__DATA__ = {
+#        @_DATA_ = {
 #          :main => #<Method #main>},
-#        @__FILE__ = "example.rb">
+#        @_FILE_ = "example.rb">
 ```
 
 This is the only thing that the `export` method doesn't support.
