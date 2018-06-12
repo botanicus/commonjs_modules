@@ -5,9 +5,7 @@ require 'import'
 require 'pry'
 
 path = ARGV.shift
-unless path && File.exist?(path)
-  abort "Usage: #{$0} examples/1_basic.rb"
-end
+abort "Usage: #{$0} examples/1_basic.rb" unless path && File.exist?(path)
 
 exports = import(path)
 binding.pry
