@@ -12,7 +12,7 @@ module Imports
       return fullpath if fullpath
     end
 
-    return nil
+    nil
   end
 
   def self.resolve_path(path)
@@ -20,9 +20,7 @@ module Imports
     if path.start_with?('.')
       caller_file = caller_locations.first.absolute_path
 
-      unless caller_file
-        raise "Error when importing #{path}: caller[0] is #{caller[0]}"
-      end
+      raise "Error when importing #{path}: caller[0] is #{caller[0]}" unless caller_file
 
       base_dir = caller_file.split('/')[0..-2].join('/')
       path = File.expand_path("#{base_dir}/#{path}")
@@ -51,13 +49,13 @@ module Imports
       if block && args.empty?
         # Lazy-loaded and cached.
         # export { Task }
-        exports.define_singleton_method(:default) { @default ||= block.call }
+        exports.define_singleton_method(:default) { @default ||= yield }
       elsif block && args.length == 1
         # Lazy-loaded and cached.
         # export(:logger) { Logger.new }
         exports.define_singleton_method(args.first) do
           if self.instance_variable_get(:"@#{args.first}").nil?
-            self.instance_variable_set(:"@#{args.first}", block.call)
+            self.instance_variable_set(:"@#{args.first}", yield)
           end
 
           self.instance_variable_get(:"@#{args.first}")
@@ -81,13 +79,11 @@ module Imports
       else
         # export MyClass
         args.each do |object|
-          if object.nil?
-            raise TypeError.new("Exported object cannot be nil!")
-          end
+          raise TypeError, "Exported object cannot be nil!" if object.nil?
 
           exports._DATA_[object.name.to_sym] = object
         rescue NoMethodError
-          raise ArgumentError.new("Every object has to respond to #name. Export the module manually using exports.name = object if the object doesn't respond to #name.")
+          raise ArgumentError, "Every object has to respond to #name. Export the module manually using exports.name = object if the object doesn't respond to #name."
         end
       end
     end
@@ -105,7 +101,7 @@ module Imports
       ::Object.const_get(name)
     end
 
-    KERNEL_METHODS_DELEGATED = [:import, :require, :raise, :puts, :p]
+    KERNEL_METHODS_DELEGATED = [:import, :require, :raise, :puts, :p].freeze
 
     def method_missing(name, *args, &block)
       super unless KERNEL_METHODS_DELEGATED.include? name
@@ -113,7 +109,7 @@ module Imports
     end
 
     def respond_to_missing?(name, include_private = false)
-      KERNEL_METHODS_DELEGATED.include?(name) or super
+      KERNEL_METHODS_DELEGATED.include?(name) || super
     end
   end
 
@@ -147,7 +143,7 @@ module Imports
           object.define_singleton_method(:name) { object_name.to_s }
           object.define_singleton_method(:inspect) { object_name.to_s }
         end
-      elsif @_DATA_.has_key?(method)
+      elsif @_DATA_.key?(method)
         @_DATA_[method]
       else
         super(method, *args, &block)
@@ -155,7 +151,7 @@ module Imports
     end
 
     def respond_to_missing?(method, include_private = false)
-      (method.to_s.match(/=$/) && args.length == 1 && block.nil?) || @_DATA_.has_key?(method)
+      (method.to_s.match(/=$/) && args.length == 1 && block.nil?) || @_DATA_.key?(method)
     end
 
     # Convenience methods.
