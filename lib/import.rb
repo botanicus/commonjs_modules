@@ -6,7 +6,7 @@ module Imports
   end
 
   def self.resolve_against_load_path(path)
-    $:.uniq.each do |directory|
+    $LOAD_PATH.uniq.each do |directory|
       choices  = [File.join(directory, path), File.join(directory, "#{path}.rb")]
       fullpath = choices.find { |choice| File.file?(choice) }
       return fullpath if fullpath
