@@ -64,10 +64,10 @@ module Imports
         raise "When used with a block, one or no argument is expected."
       elsif args.length == 1 && args.first.is_a?(Hash)
         hash = args.first
-        if hash.keys.include?(:default) && hash.keys.length == 1
+        if hash.key?(:default) && hash.keys.length == 1
           # export default: MyClass
           exports.default = hash[:default]
-        elsif hash.keys.include?(:default) && hash.keys.length > 1
+        elsif hash.key?(:default) && hash.keys.length > 1
           # export default: MyClass, something_else: MyOtherClass
           raise "Default export detected, but it wasn't the only export: #{hash.keys.inspect}"
         else
