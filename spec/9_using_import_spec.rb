@@ -25,4 +25,3 @@ describe 'Kernel#import', path: 'examples/9_using_import' do
     end
   end
 end
-

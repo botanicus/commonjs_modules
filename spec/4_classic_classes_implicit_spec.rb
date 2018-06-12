@@ -31,6 +31,3 @@ describe 'Kernel#import', path: 'examples/4_classic_classes_export' do
     end
   end
 end
-
-
-

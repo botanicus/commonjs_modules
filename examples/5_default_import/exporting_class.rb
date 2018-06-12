@@ -8,4 +8,3 @@ export Test: class Test
 
   self # Without this, it won't return the right thing.
 end
-

@@ -32,4 +32,3 @@ describe 'Kernel#import', path: 'examples/2_annonymous_classes' do
     end
   end
 end
-

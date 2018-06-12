@@ -5,4 +5,3 @@
 using import('examples/8_refinements/modules_lib')
 
 puts "Test."
-
