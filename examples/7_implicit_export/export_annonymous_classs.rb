@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Run with ./examples/runner.rb examples/file.rb
 
 # TODO: 06/06/2018 Define inspect based for this.

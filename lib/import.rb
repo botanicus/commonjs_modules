@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Imports
   def self.register
     @register ||= Hash.new

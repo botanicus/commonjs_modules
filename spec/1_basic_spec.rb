@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'import'
 
 describe 'Kernel#import', path: 'examples/1_basic' do

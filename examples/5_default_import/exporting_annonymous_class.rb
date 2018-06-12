@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Run with ./examples/runner.rb examples/file.rb
 
 # NOTE that do/end block cannot be used.

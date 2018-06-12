@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'import'
 
 describe 'Kernel#import', path: 'examples/4_classic_classes_export' do

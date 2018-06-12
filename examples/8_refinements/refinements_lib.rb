@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 export do
   Module.new do
     refine Kernel do

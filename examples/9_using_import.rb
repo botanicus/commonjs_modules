@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Run with ./examples/runner.rb examples/file.rb
 
 # Assigning to a constant will make the variable available within classes.
