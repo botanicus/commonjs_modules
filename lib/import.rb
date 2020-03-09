@@ -80,8 +80,15 @@ module Imports
         # export MyClass
         args.each do |object|
           raise TypeError, "Exported object cannot be nil!" if object.nil?
+          
+          # Remove the anonymous namespace, i. e. the first part of "#<Class:0x00005643e873a528>::Subscriptions".
+          name = object.name.split('::')[1..-1].join('::').to_sym
 
-          exports._DATA_[object.name.to_sym] = object
+          # At least for classes and modules:
+          # object.define_singleton_method(:name) { name }
+          object.define_singleton_method(:inspect) { name }
+          
+          exports._DATA_[name] = object
         rescue NoMethodError
           raise ArgumentError, "Every object has to respond to #name. Export the module manually using exports.name = object if the object doesn't respond to #name."
         end
