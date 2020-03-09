@@ -18,11 +18,11 @@ module Imports
   def self.resolve_path(path)
     # import('./test') and import('../test') behave like require_relative.
     if path.start_with?('.')
-      caller_file = caller_locations.first.absolute_path
+      location = caller_locations.find { |location| location.label === "<top (required)>" }
 
-      raise "Error when importing #{path}: caller[0] is #{caller[0]}" unless caller_file
+      raise "Error when importing #{path}" unless location
 
-      base_dir = caller_file.split('/')[0..-2].join('/')
+      base_dir = location.absolute_path.split('/')[0..-2].join('/')
       path = File.expand_path("#{base_dir}/#{path}")
     end
 
