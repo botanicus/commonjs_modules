@@ -18,7 +18,8 @@ module Imports
   def self.resolve_path(path)
     # import('./test') and import('../test') behave like require_relative.
     if path.start_with?('.')
-      location = caller_locations.find { |location| location.label === "<top (required)>" }
+      # Block in <main> is to make import work within rackup. Not sure whether it doesn't break something else though.
+      location = caller_locations.find { |location| location.label == "<top (required)>" || location.label == "block in <main>" }
 
       raise "Error when importing #{path}" unless location
 
@@ -80,14 +81,14 @@ module Imports
         # export MyClass
         args.each do |object|
           raise TypeError, "Exported object cannot be nil!" if object.nil?
-          
+
           # Remove the anonymous namespace, i. e. the first part of "#<Class:0x00005643e873a528>::Subscriptions".
           name = object.name.split('::')[1..-1].join('::').to_sym
 
           # At least for classes and modules:
           # object.define_singleton_method(:name) { name }
           object.define_singleton_method(:inspect) { name }
-          
+
           exports._DATA_[name] = object
         rescue NoMethodError
           raise ArgumentError, "Every object has to respond to #name. Export the module manually using exports.name = object if the object doesn't respond to #name."
