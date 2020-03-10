@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Run with ./examples/runner.rb examples/file.rb
 
 exports.language = 'Ruby'

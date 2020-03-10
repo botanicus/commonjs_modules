@@ -109,6 +109,14 @@ module Imports
       ::Object.const_get(name)
     end
 
+    def name
+      binding.irb
+    end
+
+    def inspect
+      binding.irb
+    end
+
     KERNEL_METHODS_DELEGATED = [:import, :require, :raise, :puts, :p].freeze
 
     def method_missing(name, *args, &block)
@@ -163,6 +171,7 @@ module Imports
     end
 
     # Convenience methods.
+    # TODO: Must fail if key not present.
     def grab(*args)
       args.map { |arg| self.send(arg) }
     end

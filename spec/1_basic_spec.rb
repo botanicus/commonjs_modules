@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'import'
 
 describe 'Kernel#import', path: 'examples/1_basic' do
@@ -7,8 +5,11 @@ describe 'Kernel#import', path: 'examples/1_basic' do
     import(example.metadata[:path])
   end
 
+  # Shouldn't this be an absolute path?
   describe '_FILE_' do
-    it -> (example) { eql(example.metadata[:path]) }
+    it "is being set correctly" do |example|
+      expect(subject._FILE_).to eql(example.metadata[:path])
+    end
   end
 
   describe 'variables' do

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 require 'import'
 
 describe 'Kernel#import', path: 'examples/2_annonymous_classes' do
